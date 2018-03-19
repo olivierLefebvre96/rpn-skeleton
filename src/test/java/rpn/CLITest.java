@@ -26,4 +26,34 @@ public class CLITest {
     public void should_evaluate_more_complex_addition() {
         assertThat(evaluate("2 3 5 + +")).isEqualTo(10);
     }
+
+    @Test
+    public void should_evaluate_simple_soustraction() {
+        assertThat(evaluate("15 12 -")).isEqualTo(3);
+    }
+
+    @Test
+    public void should_evaluate_more_complex_soustraction() {
+        assertThat(evaluate("2 7 - 19 -")).isEqualTo(-24);
+    }
+
+    @Test
+    public void should_evaluate_simple_multiplication() {
+        assertThat(evaluate("17 17 *")).isEqualTo(289);
+    }
+
+    @Test
+    public void should_evaluate_more_complex_multiplication() {
+        assertThat(evaluate("-7 5 3 * *")).isEqualTo(-105);
+    }
+
+    @Test
+    public void should_evaluate_simple_division() {
+        assertThat(evaluate("22 11 /")).isEqualTo(2);
+    }
+
+    @Test
+    public void should_evaluate_more_complex_division() {
+        assertThat(evaluate("10 2 / 2 /")).isEqualTo(2.5);
+    }
 }
