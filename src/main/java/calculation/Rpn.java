@@ -1,25 +1,24 @@
-package rpn;
+package calculation;
 
 import java.math.BigDecimal;
 import java.util.Scanner;
 import java.util.Stack;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-public class CLI {
-    public static void main(String[] args) {
-        String expression = Stream.of(args).collect(Collectors.joining(" ")).trim();
+class Rpn implements Operation {
+    private Stack<Double> stack = new Stack<>();
 
-        System.out.println("About to evaluate '" + expression + "'");
+    public BigDecimal compute(String expression){
+        if (!expression.equals("")) {
+            Double result = evaluate(expression);
 
-        BigDecimal result = !expression.equals("") ? BigDecimal.valueOf(evaluate(expression)) : BigDecimal.valueOf(0.0);
+            return result != null ? BigDecimal.valueOf(result) : null;
+        }
 
-        System.out.println("> " + result);
+        return null;
     }
 
-    static Double evaluate(String expression) {
+    private Double evaluate(String expression) {
         Scanner scanner = new Scanner(expression);
-        Stack<Double> stack = new Stack<>();
         String occurrence;
 
         while(scanner.hasNext()){
@@ -28,32 +27,36 @@ public class CLI {
             if(!isOperator(occurrence)) {
                 try {
                     stack.push(Double.parseDouble(occurrence));
-                } catch (NumberFormatException arrEx) {
-                    throw new NumberFormatException("Bad formatted RPN.\n");
+                } catch (NumberFormatException ex1) {
+                    System.out.println("Bad formatted RPN.\n");
+                    return null;
                 }
             }
             else {
                 if(stack.size() <= 1){
                     System.out.println("Invalid RPN. Check the last characters of your RPN expression.");
-                    return 0.0;
+                    return null;
                 }
                 else {
-                    compute(stack, occurrence);
-                    if(stack.size() == 0) return 0.0;
+                    processOperation(occurrence);
+                    if(stack.size() == 0) return null;
                 }
             }
         }
 
         if(stack.size() > 1) {
             System.out.println("Lack of mathematical operators to evaluate the expression.");
-            return 0.0;
+            return null;
         }
 
         return stack.pop();
     }
 
-    private static void compute(Stack<Double> stack, String occurrence){
-        switch (occurrence) {
+    /** Determine the type of operation to do in the stack
+     * @param element String to evaluate
+     */
+    private void processOperation(String element){
+        switch (element) {
             case "+":
                 stack.push(stack.pop() + stack.pop());
                 break;
@@ -78,7 +81,12 @@ public class CLI {
         }
     }
 
-    private static boolean isOperator(String str){
-        return str.equals("+") || str.equals("-") || str.equals("*") || str.equals("/");
+    /**
+     * Determine if the string parameter is a mathematical operator
+     * @param element A string
+     * @return True if the string parameter is a mathematical operator
+     */
+    private static boolean isOperator(String element){
+        return element.equals("+") || element.equals("-") || element.equals("*") || element.equals("/");
     }
 }
