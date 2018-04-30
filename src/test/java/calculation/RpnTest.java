@@ -80,7 +80,7 @@ public class RpnTest {
     }
 
     @Test
-    public void should_fail_to_evaluate_expression(){
+    public void should_be_null(){
         operation = new Rpn();
         boolean isNull = operation.compute("5 d+") == null;
 

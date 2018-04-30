@@ -1,23 +1,20 @@
 package calculation;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Scanner;
 import java.util.Stack;
 
 class Rpn implements Operation {
-    private Stack<Double> stack = new Stack<>();
+    private Stack<BigDecimal> stack = new Stack<>();
 
     public BigDecimal compute(String expression){
-        if (!expression.equals("")) {
-            Double result = evaluate(expression);
+        if (expression == null || expression.equals("")) return null;
 
-            return result != null ? BigDecimal.valueOf(result) : null;
-        }
-
-        return null;
+        return evaluate(expression);
     }
 
-    private Double evaluate(String expression) {
+    private BigDecimal evaluate(String expression) {
         Scanner scanner = new Scanner(expression);
         String occurrence;
 
@@ -26,7 +23,7 @@ class Rpn implements Operation {
 
             if(!isOperator(occurrence)) {
                 try {
-                    stack.push(Double.parseDouble(occurrence));
+                    stack.push(BigDecimal.valueOf(Double.parseDouble(occurrence)));
                 } catch (NumberFormatException ex1) {
                     System.out.println("Bad formatted RPN.\n");
                     return null;
@@ -56,26 +53,32 @@ class Rpn implements Operation {
      * @param element String to evaluate
      */
     private void processOperation(String element){
+        BigDecimal first;
+        BigDecimal second;
+
         switch (element) {
             case "+":
-                stack.push(stack.pop() + stack.pop());
+                stack.push(stack.pop().add(stack.pop()));
                 break;
             case "-":
-                stack.push(-stack.pop() + stack.pop());
+                first = stack.pop();
+                second = stack.pop();
+
+                stack.push(second.subtract(first)); //-stack.pop() + stack.pop()
                 break;
             case "*":
-                stack.push(stack.pop() * stack.pop());
+                stack.push(stack.pop().multiply(stack.pop()));
                 break;
             case "/":
-                Double first = stack.pop();
-                Double second = stack.pop();
+                first = stack.pop();
+                second = stack.pop();
 
-                if(first == 0){
+                if(first.equals(BigDecimal.ZERO)){
                     System.out.println("Division error. Trying to divide by zero?");
                     return;
                 }
 
-                stack.push(second / first);
+                stack.push(second.divide(first, RoundingMode.UNNECESSARY));
 
                 break;
         }
