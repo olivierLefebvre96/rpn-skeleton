@@ -1,4 +1,4 @@
-package calculation;
+package calculationOLD;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -64,7 +64,7 @@ class Rpn implements Operation {
                 first = stack.pop();
                 second = stack.pop();
 
-                stack.push(second.subtract(first)); //-stack.pop() + stack.pop()
+                stack.push(second.subtract(first));
                 break;
             case "*":
                 stack.push(stack.pop().multiply(stack.pop()));
