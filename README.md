@@ -65,7 +65,7 @@ $ mvn clean package -DskipTests
 Lancer le programme directement (une fois le jar générer):
 
 ```
-$ java -cp target/esgi-calculation-1.0-SNAPSHOT.jar calculation.CLI "4 3 +"
+$ java -cp target/esgi-rpn-1.0-SNAPSHOT.jar calculation.CLI "4 3 +"
 ```
 
 # Ressources
