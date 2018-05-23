@@ -5,6 +5,9 @@ import calculator.token.Token;
 
 import java.math.BigDecimal;
 
+/**
+ * Subtract expression for evaluating mathematical subtractions
+ */
 public class Subtract extends Expression {
     Subtract(Token leftToken, Token rightToken) {
         super(leftToken, rightToken);

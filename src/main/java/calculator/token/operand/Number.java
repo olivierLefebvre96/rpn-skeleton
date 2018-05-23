@@ -4,6 +4,9 @@ import calculator.token.Token;
 
 import java.math.BigDecimal;
 
+/**
+ * Operand which represents BigDecimal mathematical numbers
+ */
 public class Number implements Token {
 
     private final BigDecimal number;
@@ -16,5 +19,4 @@ public class Number implements Token {
     public BigDecimal evaluate() {
         return number;
     }
-
 }

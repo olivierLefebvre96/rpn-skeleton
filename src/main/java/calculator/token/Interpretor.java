@@ -6,10 +6,17 @@ import calculator.token.operator.OperatorRegistry;
 import java.math.BigDecimal;
 import java.util.Stack;
 
+/**
+ * Interpretor class which hosts the code to tokenize the input
+ */
 public class Interpretor {
-    public static Stack<Token> stack = new Stack<>();
+    private static Stack<Token> stack = new Stack<>();
     public static BigDecimal lastResult = null;
 
+    /**
+     * Processes the input String
+     * @param stringToEvaluate The input String to evaluate
+     */
     public static void interpret(String stringToEvaluate){
         if(stringToEvaluate.isEmpty()) {
             System.out.println("Insufficient number of characters to interpret.");
@@ -35,7 +42,10 @@ public class Interpretor {
                 Token leftToken = stack.pop();
                 Token operator = OperatorRegistry.getOperator(stringToken, leftToken, rightToken);
 
-                if(operator == null) return;
+                if(operator == null) {
+                    System.out.println("Unexpected token found instead of an operator.");
+                    return;
+                }
 
                 BigDecimal result = operator.evaluate();
 
@@ -54,13 +64,24 @@ public class Interpretor {
         }
 
         lastResult = stack.pop().evaluate();
+
         printResult(stringToEvaluate, lastResult);
     }
 
-    private static void printResult(String stringToPrint, BigDecimal evaluatedRpn){
-        System.out.println("( " + stringToPrint + " ) = " + evaluatedRpn);
+    /**
+     * Prints the result to the terminal
+     * @param input Operation before processing
+     * @param output Operation's result after processing
+     */
+    private static void printResult(String input, BigDecimal output){
+        System.out.println("( " + input + " ) = " + output);
     }
 
+    /**
+     * Checks for incorrect and/or unknown tokens
+     * @param stringToParse String to parse for incorrect tokens
+     * @return Does it contains incorrect tokens or not?
+     */
     private static boolean containsIncorrectToken(String stringToParse){
         return !stringToParse.matches("[\\d\\s-*/+]+");
     }

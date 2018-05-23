@@ -5,6 +5,9 @@ import calculator.token.Token;
 
 import java.math.BigDecimal;
 
+/**
+ * Add expression for evaluating mathematical additions
+ */
 public class Add extends Expression {
     Add(Token leftToken, Token rightToken) {
         super(leftToken, rightToken);
