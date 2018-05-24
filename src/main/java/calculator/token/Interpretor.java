@@ -38,6 +38,11 @@ public class Interpretor {
         for (String stringToken : tokenArray) {
             if (OperatorRegistry.isOperator(stringToken)) {
 
+                if(stack.size() < 2) {
+                    System.out.println("Unexpected operator that got no operand to \"bind\" with.");
+                    return;
+                }
+
                 Token rightToken = stack.pop();
                 Token leftToken = stack.pop();
                 Token operator = OperatorRegistry.getOperator(stringToken, leftToken, rightToken);
@@ -57,7 +62,17 @@ public class Interpretor {
                 stack.push(new Number(result));
 
             } else {
-                Double doubleToken = Double.parseDouble(stringToken);
+                Double doubleToken = null;
+
+                try {
+                    doubleToken = Double.parseDouble(stringToken);
+                } catch (NumberFormatException ex){
+                    System.out.println("Expected an operand after operator but got another operator.");
+                    return;
+                }
+
+                if(doubleToken == null) return;
+
                 Token numberToken = new Number(BigDecimal.valueOf(doubleToken));
                 stack.push(numberToken);
             }
