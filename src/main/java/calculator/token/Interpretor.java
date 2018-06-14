@@ -4,85 +4,64 @@ import calculator.token.operand.Number;
 import calculator.token.operator.OperatorRegistry;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.Stack;
 
 /**
- * Interpretor class which hosts the code to tokenize the input
+ * Interpretor class which tokenizes the input
  */
 public class Interpretor {
-    private static Stack<Token> stack = new Stack<>();
-    public static BigDecimal lastResult = null;
+    private OperatorRegistry operatorRegistry = new OperatorRegistry();
+    private Stack<Token> stack = new Stack<>();
 
     /**
      * Processes the input String
-     * @param stringToEvaluate The input String to evaluate
+     * @param tokensToEvaluate The input String to evaluate
      */
-    public static void interpret(String stringToEvaluate){
-        if(stringToEvaluate.isEmpty()) {
-            System.out.println("Insufficient number of characters to interpret.");
-            return;
-        }
+    public BigDecimal interpret(String[] tokensToEvaluate){
+        if (tokensToEvaluate == null) return null;
 
-        if(containsIncorrectToken(stringToEvaluate)) {
-            System.out.println("String to parse contains incorrect tokens such as letters which are currently not supported.");
-            return;
-        }
+        for (String stringToken : tokensToEvaluate) {
+            if (operatorRegistry.isOperator(stringToken)) {
 
-        String[] tokenArray = stringToEvaluate.split(" ");
+                BigDecimal result = extractResult(stringToken);
 
-        if(tokenArray.length <= 0) {
-            System.out.println("Insufficient number of tokens to interpret.");
-            return;
-        }
-
-        for (String stringToken : tokenArray) {
-            if (OperatorRegistry.isOperator(stringToken)) {
-
-                Token rightToken = stack.pop();
-                Token leftToken = stack.pop();
-                Token operator = OperatorRegistry.getOperator(stringToken, leftToken, rightToken);
-
-                if(operator == null) {
-                    System.out.println("Unexpected token found instead of an operator.");
-                    return;
-                }
-
-                BigDecimal result = operator.evaluate();
-
-                if(result == null) {
-                    System.out.println("Result could not be evaluated due to an unknown error.");
-                    return;
-                }
+                if (result == null) return null;
 
                 stack.push(new Number(result));
 
             } else {
                 Double doubleToken = Double.parseDouble(stringToken);
                 Token numberToken = new Number(BigDecimal.valueOf(doubleToken));
+
                 stack.push(numberToken);
             }
         }
 
-        lastResult = stack.pop().evaluate();
-
-        printResult(stringToEvaluate, lastResult);
+        return stack.pop().evaluate();
     }
 
     /**
-     * Prints the result to the terminal
-     * @param input Operation before processing
-     * @param output Operation's result after processing
+     * Check the expression by evaluating it and returns it
+     * @param stringToken The current token
+     * @return The evaluated result or null if error
      */
-    private static void printResult(String input, BigDecimal output){
-        System.out.println("( " + input + " ) = " + output);
-    }
+    private BigDecimal extractResult(String stringToken) {
+        Token rightToken = stack.pop();
+        Token leftToken = stack.pop();
+        Token operator = operatorRegistry.getOperator(stringToken, leftToken, rightToken);
 
-    /**
-     * Checks for incorrect and/or unknown tokens
-     * @param stringToParse String to parse for incorrect tokens
-     * @return Does it contains incorrect tokens or not?
-     */
-    private static boolean containsIncorrectToken(String stringToParse){
-        return !stringToParse.matches("[\\d\\s-*/+]+");
+        if(operator == null) {
+            System.out.println("Unexpected token found instead of an operator.");
+            return null;
+        }
+
+        BigDecimal result = operator.evaluate();
+
+        if(result == null) {
+            System.out.println("Result could not be evaluated due to an unknown error.");
+            return null;
+        }
+        return result;
     }
 }

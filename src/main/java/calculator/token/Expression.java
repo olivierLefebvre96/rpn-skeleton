@@ -1,9 +1,11 @@
 package calculator.token;
 
+import java.math.BigDecimal;
+
 /**
  * Represents an mathematical expression which is composed of tokens
  */
-public abstract class Expression implements Token {
+public class Expression implements Token {
     protected final Token leftToken;
     protected final Token rightToken;
 
@@ -15,5 +17,10 @@ public abstract class Expression implements Token {
     protected Expression(Token leftToken, Token rightToken){
         this.leftToken = leftToken;
         this.rightToken = rightToken;
+    }
+
+    @Override
+    public BigDecimal evaluate() {
+        return null;
     }
 }

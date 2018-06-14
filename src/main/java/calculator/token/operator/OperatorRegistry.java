@@ -11,7 +11,7 @@ public class OperatorRegistry {
      * @param stringToken The token to check
      * @return Is an operator char or not
      */
-    public static boolean isOperator(String stringToken) {
+    public boolean isOperator(String stringToken) {
         return stringToken.equals("+") || stringToken.equals("-") || stringToken.equals("*") || stringToken.equals("/");
     }
 
@@ -22,7 +22,7 @@ public class OperatorRegistry {
      * @param right The right token to evaluate
      * @return The Expression corresponding to the operator found
      */
-    public static Expression getOperator(String operator, Token left, Token right) {
+    public Expression getOperator(String operator, Token left, Token right) {
         switch (operator) {
             case "+":
                 return new Add(left, right);
