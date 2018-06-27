@@ -69,7 +69,7 @@ public class InterpretorTest {
     @Test
     public void should_evaluate_simple_division() {
         TokenDispatcher.eventDispatching(eventDispatcher, "22 11 /");
-        assertThat(TokenDispatcher.lastResult).isEqualTo(BigDecimal.valueOf(2.0));
+        assertThat(TokenDispatcher.lastResult).isEqualTo(BigDecimal.valueOf(2));
     }
 
     @Test
@@ -82,5 +82,11 @@ public class InterpretorTest {
     public void should_be_null(){
         TokenDispatcher.eventDispatching(eventDispatcher, "5 d+");
         assertThat(TokenDispatcher.lastResult == null).isTrue();
+    }
+
+    @Test
+    public void should_evaluate_complex_operation(){
+        TokenDispatcher.eventDispatching(eventDispatcher, "5 9 * 5 / 6 / 8 /");
+        assertThat(TokenDispatcher.lastResult).isCloseTo(BigDecimal.valueOf(0.1875), Percentage.withPercentage(0.0001));
     }
 }

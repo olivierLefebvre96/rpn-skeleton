@@ -4,6 +4,7 @@ import calculator.token.Expression;
 import calculator.token.Token;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.util.Objects;
 
 /**
@@ -21,6 +22,6 @@ public class Divide extends Expression {
             return null;
         }
 
-        return BigDecimal.ZERO.add(leftToken.evaluate()).divide(rightToken.evaluate(), BigDecimal.ROUND_UNNECESSARY);
+        return BigDecimal.ZERO.add(leftToken.evaluate()).divide(rightToken.evaluate(), MathContext.DECIMAL128);
     }
 }
